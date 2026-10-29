@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Practice · Earth's Core</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #f2f5f9;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25);
+            padding: 2rem 2rem 2.5rem;
+            transition: all 0.2s;
+        }
+
+        /* --- start screen --- */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.8rem;
+            padding: 1.5rem 0 0.5rem;
+        }
+
+        .start-screen h1 {
+            font-size: 2.1rem;
+            font-weight: 600;
+            color: #0b2b3b;
+            letter-spacing: -0.02em;
+            border-bottom: 3px solid #3a7ca5;
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #1d3b4f;
+            font-size: 1rem;
+        }
+
+        .form-group input {
+            padding: 0.9rem 1.2rem;
+            border: 1.5px solid #cbdae6;
+            border-radius: 60px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.15s, box-shadow 0.15s;
+            background: #fbfdff;
+        }
+
+        .form-group input:focus {
+            border-color: #3a7ca5;
+            box-shadow: 0 0 0 4px rgba(58, 124, 165, 0.15);
+        }
+
+        .btn {
+            background: #1f5e7a;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 6px 14px rgba(27, 74, 94, 0.3);
+            letter-spacing: 0.3px;
+            margin-top: 0.8rem;
+        }
+
+        .btn:hover {
+            background: #0f435b;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-secondary {
+            background: #e7eef4;
+            color: #1d3b4f;
+            box-shadow: none;
+            border: 1px solid #b8cfdf;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: #d2e0ea;
+        }
+
+        /* --- test screen --- */
+        .test-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .user-badge {
+            background: #e7f0f7;
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            color: #1d3b4f;
+            align-self: flex-start;
+            border: 1px solid #c2d8e8;
+            flex-wrap: wrap;
+        }
+
+        .user-badge span {
+            font-weight: 600;
+            color: #0a3142;
+        }
+
+        .reading-section {
+            background: #f8fbfe;
+            border-radius: 24px;
+            padding: 1.5rem 1.8rem;
+            border-left: 6px solid #3a7ca5;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 0.96rem;
+            line-height: 1.65;
+            color: #1e2f3a;
+            scrollbar-width: thin;
+        }
+
+        .reading-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #123b4e;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.01em;
+        }
+
+        .reading-section p {
+            margin-bottom: 0.8rem;
+        }
+
+        .reading-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+            margin: 0.5rem 0 0.8rem;
+        }
+
+        .question-item {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.2rem 1.6rem;
+            border: 1px solid #d9e5f0;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-item:hover {
+            box-shadow: 0 6px 16px rgba(0, 33, 55, 0.06);
+        }
+
+        .question-text {
+            font-weight: 500;
+            font-size: 1.05rem;
+            color: #0a293b;
+            margin-bottom: 0.8rem;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: #3a7ca5;
+            min-width: 1.8rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            padding-left: 2rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            font-size: 0.98rem;
+            color: #1f4055;
+            cursor: pointer;
+            padding: 0.25rem 0;
+        }
+
+        .option input[type="radio"] {
+            margin-top: 0.2rem;
+            accent-color: #2c6f8f;
+            width: 1.1rem;
+            height: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .submit-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.2rem;
+        }
+
+        /* --- result screen --- */
+        .result-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .result-header {
+            background: linear-gradient(145deg, #e2eef9, #d1e2f0);
+            padding: 1.6rem 2rem;
+            border-radius: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .result-header .info h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0a2f40;
+            margin-bottom: 0.2rem;
+        }
+
+        .result-header .info p {
+            font-size: 1rem;
+            color: #1d4b61;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.8rem;
+        }
+
+        .result-header .info span.value {
+            font-weight: 700;
+            color: #103d52;
+        }
+
+        .score-box {
+            background: #1e4e63;
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.9rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: baseline;
+            gap: 0.3rem;
+        }
+
+        .score-box small {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-left: 0.3rem;
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .review-item {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 1.2rem 1.6rem;
+            border-left: 6px solid #b0c9db;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.6rem 1.2rem;
+        }
+
+        .review-item.correct {
+            border-left-color: #2a9d8f;
+            background: #f5fdfb;
+        }
+
+        .review-item.incorrect {
+            border-left-color: #d45a5a;
+            background: #fef7f7;
+        }
+
+        .review-q {
+            font-weight: 600;
+            color: #123b4e;
+            display: flex;
+            gap: 10px;
+            flex: 1 1 200px;
+        }
+
+        .review-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            font-size: 0.95rem;
+            color: #1e3f52;
+        }
+
+        .review-detail .item {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .review-detail .label {
+            font-weight: 500;
+            color: #4f6f82;
+        }
+
+        .review-detail .user-ans {
+            font-weight: 600;
+        }
+
+        .correct-ans {
+            color: #1d7a6b;
+            font-weight: 600;
+        }
+
+        .wrong-ans {
+            color: #b33f3f;
+            font-weight: 600;
+        }
+
+        .badge-ok {
+            background: #dff3ef;
+            color: #1d6b5e;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .back-link {
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .reading-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .reading-section::-webkit-scrollbar-track {
+            background: #e7eef4;
+            border-radius: 10px;
+        }
+
+        .reading-section::-webkit-scrollbar-thumb {
+            background: #b1c9db;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 700px) {
+            .app-container { padding: 1.5rem; }
+            .result-header { flex-direction: column; align-items: flex-start; }
+            .score-box { align-self: flex-start; }
+            .question-text { font-size: 1rem; }
+            .options { padding-left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- START SCREEN -->
+        <div id="startScreen" class="start-screen">
+            <h1>📖 Reading Practice</h1>
+            <div class="form-group">
+                <label for="fullName">Full name</label>
+                <input type="text" id="fullName" placeholder="e.g., Alex Rivera" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="studyProgram">Study program</label>
+                <input type="text" id="studyProgram" placeholder="e.g., Geology, English Literature" autocomplete="off">
+            </div>
+            <button class="btn" id="startBtn">Next →</button>
+        </div>
+
+        <!-- TEST SCREEN -->
+        <div id="testScreen" class="test-screen hidden">
+            <div class="user-badge" id="userBadge">
+                👤 <span id="badgeName"></span> · <span id="badgeProgram"></span>
+            </div>
+
+            <!-- Reading passage -->
+            <div class="reading-section">
+                <h3>Earth's Core</h3>
+                <p>Seismologists once believed that the Earth's core was entirely molten. They based their assumption on the fact that secondary (S) waves emanating from earthquakes could not be detected on the other side of the globe. This is because S-waves do not pass through liquids. On the other hand, primary (P) waves, which do travel through liquids, were detectable; so it was reasonable to assume the inner core was molten.</p>
+                <p>However, later research brought this hypothesis into question. Working with seismic waves in 1929, Danish seismologist Inge Lehmann noted that indirect signals of P-waves, or echoes, seemed to deflect off some sort of inner boundary. She attributed this to a discontinuity, or change in composition, within the core. In a 1936 paper known simply as "P Prime," she described the Earth's core as having solid and liquid layers. Since Lehmann was the first to demonstrate the existence of both an inner and outer core, the dividing line between them is known as Lehmann's discontinuity. Lehmann's hypothesis became widely accepted by the 1970s as more sensitive seismic instruments began to appear and more seismic data was compiled. Since Lehmann's time, scientists have learned much about the physical characteristics of the core.</p>
+                <p>The Earth's interior is layered like an onion. This is because gravity has sorted elements according to density. Deep within the Earth, 2,900 kilometers beneath the crust, is the core, which consists of an extremely dense solid inner section and a molten outer layer. The inner core has a radius of 1,255 kilometers and is made up of mostly iron and nickel, heavy elements which are under extreme pressure from the weight of the molten and solid rock above them. Temperatures in the inner core are similar to those on the Sun's surface, reaching somewhere between 4,500°C and 5,500°C. Pressure, temperature, and density of elemental material all drop by approximately half as you move away from the solid interior, and although heavy metals also constitute much of the outer core, there they exist in molten form. Small amounts of silicon and hydrogen are also present. These lighter elements move toward the upper limits of the outer core and may sometimes solidify beneath the mantle.</p>
+                <p>Such differences between the inner and outer core result in a dynamic relationship between the two, and the interaction of forces in the Earth's core has profound implications for the planet's surface. As the inner and outer core rotate, the liquid in the outer core circulates, generating temperature gradients within the hot, soup-like concoction. Some of the heat escapes into the upper layers, eventually finding its way to the surface via conduction or convection. This heat transfer, which is the principal cause of plate tectonics, moves continents, builds mountains, and causes earthquakes and the formation of volcanoes.</p>
+                <p>Additionally, since the inner core is isolated from the Earth's upper layers by the outer core, it rotates more rapidly than the rest of the planet. The differential between the spin of the inner and outer core creates electric currents, resulting in continual melting and solidification at the inner-outer core boundary. This activity generates a tremendous energy release and gives rise to the magnetic field of the Earth. It is the magnetic field that protects the Earth from solar wind, a stream of charged particles scattered from the Sun into space. It is also the force allowing compass navigation; because magnetism is stronger at the poles. Although the influence of the core on the Earth and space is continuous, it is nonetheless variable. Just as tectonic movement is stronger in some spots than others and does not occur in regular patterns or intervals, the Earth's magnetic field has varying intensities in different locations and changes over time. In fact, the direction of the magnetic field has reversed many times in the past. Such variations are direct consequences of changes occurring deep within the core.</p>
+            </div>
+
+            <!-- Questions -->
+            <div class="question-list" id="questionList"></div>
+
+            <div class="submit-container">
+                <button class="btn" id="submitBtn">Submit test ✓</button>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="resultScreen" class="result-screen hidden">
+            <div class="result-header" id="resultHeader"></div>
+            <div class="review-list" id="reviewList"></div>
+            <div class="back-link">
+                <button class="btn btn-secondary" id="restartBtn">↺ Take again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 20 questions with answer key ----------
+            const questions = [
+                { text: "Why did early seismologists believe the Earth's core was entirely molten?", options: ["S-waves could not pass through it", "P-waves disappeared completely", "Volcanoes were common", "The crust was very thin"], answer: 0 }, // a
+                { text: "What did Inge Lehmann discover?", options: ["Earth has no core", "Earth's core has 2 layers", "P-waves do not exist", "The mantle is liquid"], answer: 1 }, // b
+                { text: "What did Lehmann observe in 1929 that challenged the earlier hypothesis?", options: ["S-waves crossed the entire core", "The crust began to melt", "P-wave echoes were deflected", "The mantle stopped moving"], answer: 2 }, // c
+                { text: "What are the main elements in the inner core?", options: ["Silicon and hydrogen", "Oxygen and carbon", "Iron and nickel", "Gold and silver"], answer: 2 }, // c
+                { text: "Why is the Earth's interior arranged in layers?", options: ["Gravity separates elements by density", "Sunlight heats the deepest rocks", "Earthquakes divide the crust", "Ocean water enters the core"], answer: 0 }, // a
+                { text: "According to the passage, what causes plate tectonics?", options: ["Ocean currents", "Solar radiation", "Heat transfer from the core", "Atmospheric pressure"], answer: 2 }, // c
+                { text: "What happens to pressure, temperature, and density as one moves away from the inner core?", options: ["They double", "They remain constant", "They increase slightly", "They decrease by about half"], answer: 3 }, // d
+                { text: "What is one result of interactions between the inner and outer core?", options: ["Formation of clouds", "Creation of Earth's magnetic field", "Growth of glaciers", "Reduction of gravity"], answer: 1 }, // b
+                { text: "Why does the inner core rotate faster than the rest of the Earth?", options: ["It is isolated by the outer core", "It is less dense", "It is cooler", "It contains more hydrogen"], answer: 0 }, // a
+                { text: "How does heat from the core affect Earth's surface?", options: ["It stops continental movement", "It prevents volcanic activity", "It helps move continents and form mountains", "It reduces the number of earthquakes"], answer: 2 }, // c
+                { text: "What happens at the boundary between the inner and outer core?", options: ["All metals become gases", "The crust begins to form", "The core loses its rotation", "Material continually melts and solidifies"], answer: 3 }, // d
+                { text: "What is one important function of Earth's magnetic field?", options: ["It creates the Sun's energy", "It protects Earth from solar wind", "It prevents all earthquakes", "It increases Earth's temperature"], answer: 1 }, // b
+                { text: "The word \"emanating\" is closest in meaning to:", options: ["returning", "spreading", "stopping", "collecting"], answer: 1 }, // b
+                { text: "The word \"discontinuity\" is closest in meaning to:", options: ["boundary", "pattern", "layer", "signal"], answer: 0 }, // a
+                { text: "The word \"constitute\" is closest in meaning to:", options: ["destroy", "replace", "form", "measure"], answer: 2 }, // c
+                { text: "The word \"profound\" is closest in meaning to:", options: ["significant", "obvious", "temporary", "ordinary"], answer: 0 }, // a
+                { text: "The word \"differential\" is closest in meaning to:", options: ["movement", "balance", "increase", "difference"], answer: 3 }, // d
+                { text: "The word \"variable\" is closest in meaning to:", options: ["changing", "permanent", "stable", "predictable"], answer: 0 }, // a
+                { text: "The word \"conduction\" is closest in meaning to:", options: ["Movement of heat through material", "Release of electric charge", "Production of sound waves", "Formation of solid rock"], answer: 0 }, // a
+                { text: "The word \"reversed\" is closest in meaning to:", options: ["Repeated", "Changed to the opposite", "Slowly weakened", "Completely disappeared"], answer: 1 } // b
+            ];
+
+            // State
+            let userAnswers = new Array(questions.length).fill(null);
+            let fullName = '';
+            let studyProgram = '';
+            let startTime = null;
+            let testCompleted = false;
+
+            // DOM elements
+            const startScreen = document.getElementById('startScreen');
+            const testScreen = document.getElementById('testScreen');
+            const resultScreen = document.getElementById('resultScreen');
+            const fullNameInput = document.getElementById('fullName');
+            const studyProgramInput = document.getElementById('studyProgram');
+            const startBtn = document.getElementById('startBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const questionList = document.getElementById('questionList');
+            const badgeName = document.getElementById('badgeName');
+            const badgeProgram = document.getElementById('badgeProgram');
+            const resultHeader = document.getElementById('resultHeader');
+            const reviewList = document.getElementById('reviewList');
+
+            // ---------- Render questions ----------
+            function renderQuestions() {
+                if (!questionList) return;
+                let html = '';
+                questions.forEach((q, idx) => {
+                    const qNum = idx + 1;
+                    html += `<div class="question-item" id="q-${idx}">`;
+                    html += `<div class="question-text"><span class="question-number">${qNum}.</span> ${q.text}</div>`;
+                    html += `<div class="options">`;
+                    q.options.forEach((opt, optIdx) => {
+                        const letter = String.fromCharCode(97 + optIdx);
+                        const checked = (userAnswers[idx] === optIdx) ? 'checked' : '';
+                        html += `<label class="option">
+                                    <input type="radio" name="q${idx}" value="${optIdx}" data-qidx="${idx}" ${checked}>
+                                    <span>${letter}. ${opt}</span>
+                                </label>`;
+                    });
+                    html += `</div></div>`;
+                });
+                questionList.innerHTML = html;
+
+                // Attach change listeners
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.addEventListener('change', function(e) {
+                        const qIdx = parseInt(this.dataset.qidx);
+                        const val = parseInt(this.value);
+                        if (!isNaN(qIdx) && !isNaN(val)) {
+                            userAnswers[qIdx] = val;
+                        }
+                    });
+                });
+            }
+
+            // ---------- helper: format time ----------
+            function formatDuration(ms) {
+                const totalSec = Math.floor(ms / 1000);
+                const min = Math.floor(totalSec / 60);
+                const sec = totalSec % 60;
+                return `${min} min ${sec} sec`;
+            }
+
+            // ---------- show test screen ----------
+            function showTestScreen() {
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                testScreen.classList.remove('hidden');
+
+                badgeName.textContent = fullName || 'Student';
+                badgeProgram.textContent = studyProgram || '—';
+
+                renderQuestions();
+            }
+
+            // ---------- start test ----------
+            function startTest() {
+                const name = fullNameInput.value.trim();
+                const program = studyProgramInput.value.trim();
+                if (!name) {
+                    alert('Please enter your full name.');
+                    return;
+                }
+                if (!program) {
+                    alert('Please enter your study program.');
+                    return;
+                }
+                fullName = name;
+                studyProgram = program;
+                userAnswers = new Array(questions.length).fill(null);
+                startTime = Date.now();
+                testCompleted = false;
+                showTestScreen();
+            }
+
+            // ---------- compute score ----------
+            function computeScore() {
+                let correct = 0;
+                questions.forEach((q, idx) => {
+                    if (userAnswers[idx] === q.answer) correct++;
+                });
+                return { correct, total: questions.length };
+            }
+
+            // ---------- build result screen ----------
+            function showResult() {
+                const endTime = Date.now();
+                const durationMs = endTime - startTime;
+                const timeStr = formatDuration(durationMs);
+                const { correct, total } = computeScore();
+
+                // Header
+                resultHeader.innerHTML = `
+                    <div class="info">
+                        <h2>${fullName}</h2>
+                        <p>
+                            <span>📚 <span class="value">${studyProgram}</span></span>
+                            <span>⏱️ Time taken: <span class="value">${timeStr}</span></span>
+                        </p>
+                    </div>
+                    <div class="score-box">${correct}<small>/${total}</small></div>
+                `;
+
+                // Review list
+                let reviewHtml = '';
+                questions.forEach((q, idx) => {
+                    const userAns = userAnswers[idx];
+                    const isCorrect = (userAns === q.answer);
+                    const userLetter = (userAns !== null && userAns !== undefined) ? String.fromCharCode(97 + userAns) : '—';
+                    const correctLetter = String.fromCharCode(97 + q.answer);
+                    const userText = (userAns !== null && userAns !== undefined) ? q.options[userAns] : 'Not answered';
+                    const correctText = q.options[q.answer];
+
+                    reviewHtml += `<div class="review-item ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="review-q"><span class="question-number">${idx+1}.</span> ${q.text}</div>
+                        <div class="review-detail">
+                            <div class="item"><span class="label">Your answer:</span> 
+                                <span class="${isCorrect ? 'correct-ans' : 'wrong-ans'}">${userLetter}. ${userText}</span>
+                            </div>
+                            <div class="item"><span class="label">Key:</span> 
+                                <span class="correct-ans">${correctLetter}. ${correctText}</span>
+                            </div>
+                            ${isCorrect ? '<span class="badge-ok">✓ correct</span>' : ''}
+                        </div>
+                    </div>`;
+                });
+                reviewList.innerHTML = reviewHtml;
+
+                // switch screens
+                startScreen.classList.add('hidden');
+                testScreen.classList.add('hidden');
+                resultScreen.classList.remove('hidden');
+            }
+
+            // ---------- submit ----------
+            function onSubmit() {
+                const missing = userAnswers.some(a => a === null || a === undefined);
+                if (missing) {
+                    if (!confirm('Some questions are unanswered. Submit anyway?')) return;
+                }
+                if (testCompleted) return;
+                testCompleted = true;
+                showResult();
+            }
+
+            // ---------- restart ----------
+            function restart() {
+                userAnswers = new Array(questions.length).fill(null);
+                fullName = '';
+                studyProgram = '';
+                startTime = null;
+                testCompleted = false;
+
+                fullNameInput.value = '';
+                studyProgramInput.value = '';
+
+                startScreen.classList.remove('hidden');
+                testScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+            }
+
+            // ---------- event listeners ----------
+            startBtn.addEventListener('click', startTest);
+            submitBtn.addEventListener('click', onSubmit);
+            restartBtn.addEventListener('click', restart);
+
+            fullNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    studyProgramInput.focus();
+                }
+            });
+            studyProgramInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    startTest();
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
